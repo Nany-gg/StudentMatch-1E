@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentMatch 1E</title>
+    <style>
+        /* Estilos básicos */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .tab {
+            display: none;
+        }
+        .tab.active {
+            display: block;
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+        .tabs div {
+            cursor: pointer;
+        }
+        .post {
+            background: white;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .heart {
+            color: red;
+            cursor: pointer;
+        }
+        .chat {
+            height: 200px;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+    <div class="tabs">
+        <div onclick="showTab(0)">Feed</div>
+        <div onclick="showTab(1)">Novedades</div>
+        <div onclick="showTab(2)">Primeros Lugares</div>
+    </div>
+    <div id="tab-feed" class="tab active">
+        <h2>Feed</h2>
+        <p>El mejor de 1°E  Ciclo:2024-2027</p>
+        <div id="posts"></div>
+    </div>
+    <div id="tab-novedades" class="tab">
+        <h2>Novedades</h2>
+        <div class="chat" id="chat"></div>
+        <input type="text" id="chatInput" placeholder="Escribe un mensaje..." />
+        <button onclick="sendMessage()">Enviar</button>
+        <div id="votacionesLunes"></div>
+    </div>
+    <div id="tab-primeros" class="tab">
+        <h2>Primeros Lugares</h2>
+        <div id="topVotados"></div>
+    </div>
+
+    <script>
+        const nombres = [
+            "Edgar Gael", "Joselin Berenice", "Jesús Manuel", "Febe Aurora", "Hade", 
+            "Kenay Valentina", "Yeimi Avril", "Rosalba Camila", "Kimberly", "Rafael Maximiliano",
+            "Ricardo Ismael", "Iker José", "Yiret Emmanuel", "Raúl Alejandro", "Keren Yazmin",
+            "Edwin Yamani", "Yuilli Yovanni", "Perla Zayuri", "Jonathan Gamaliel", "Dana Valeria",
+            "Brandon Alexander"
+        ];
+
+        let votos = {};
+
+        function showTab(index) {
+            document.querySelectorAll('.tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+        }
+
+        function crearPosts() {
+            const postsContainer = document.getElementById('posts');
+            nombres.forEach(nombre => {
+                const post = document.createElement('div');
+                post.className = 'post';
+                post.innerHTML = `
+                    <p>Vota por mi el mejor de la clase 1°E</p>
+                    <p><strong>${nombre}</strong></p>
+                    <span class="heart" onclick="votar('${nombre}')">❤️</span> <span id="votos-${nombre}">0</span> votos
+                `;
+                postsContainer.appendChild(post);
+                votos[nombre] = 0;
+            });
+        }
+
+        function votar(nombre) {
+            votos[nombre]++;
+            document.getElementById(`votos-${nombre}`).textContent = votos[nombre];
+            document.getElementById('chat').innerHTML += `<p>Anónimo votó por ${nombre}</p>`;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value;
+            if (message) {
+                document.getElementById('chat').innerHTML += `<p>Anónimo: ${message}</p>`;
+                input.value = '';
+            }
+        }
+
+        // Llamamos a la función para crear los posts al cargar la página
+        crearPosts();
+    </script>
+</body>
+</html>
